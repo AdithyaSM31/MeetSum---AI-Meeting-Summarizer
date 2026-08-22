@@ -5,21 +5,25 @@
 /* ─── CSS Custom Properties ───────────────────────────────────────────────── */
 :root {
   /* Background */
-  --bg-primary: #06070d;
+  --bg-primary: transparent; /* Transparent to let waves show through */
+  --bg-panel: rgba(20, 21, 31, 0.6);
+  --bg-panel-hover: rgba(30, 31, 46, 0.8);
   --bg-secondary: #0d0f1a;
-  --bg-card: rgba(15, 18, 35, 0.7);
-  --bg-card-hover: rgba(20, 24, 45, 0.85);
+  --bg-card: rgba(255, 255, 255, 0.04);
+  --bg-card-hover: rgba(255, 255, 255, 0.08);
   --bg-glass: rgba(255, 255, 255, 0.03);
   --bg-input: rgba(255, 255, 255, 0.05);
 
   /* Text */
-  --text-primary: #f0f0f5;
-  --text-secondary: #8b8fa3;
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
   --text-muted: #555872;
-  --text-accent: #a78bfa;
+  --text-accent: #a3e635;
 
   /* Accents */
-  --accent-purple: #7c3aed;
+  --primary-color: #84cc16;
+  --accent-purple: #84cc16; /* Updated to match new color scheme */
+  --accent-lime: #84cc16;
   --accent-blue: #3b82f6;
   --accent-teal: #06b6d4;
   --accent-green: #10b981;
@@ -28,19 +32,19 @@
   --accent-pink: #ec4899;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #7c3aed, #3b82f6, #06b6d4);
-  --gradient-card: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(59, 130, 246, 0.04));
-  --gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.15), transparent 60%);
+  --gradient-primary: linear-gradient(135deg, #84cc16, #a3e635, #4ade80);
+  --gradient-card: linear-gradient(135deg, rgba(132, 204, 22, 0.08), rgba(163, 230, 53, 0.04));
+  --gradient-glow: radial-gradient(ellipse at 50% 0%, rgba(132, 204, 22, 0.15), transparent 60%);
 
   /* Borders */
   --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-accent: rgba(124, 58, 237, 0.3);
+  --border-accent: rgba(132, 204, 22, 0.3);
 
   /* Shadows */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 40px rgba(124, 58, 237, 0.15);
+  --shadow-glow: 0 0 40px rgba(132, 204, 22, 0.15);
 
   /* Spacing */
   --radius-sm: 8px;
@@ -62,11 +66,12 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #06070d; /* Dark base so WebGL alpha blends with black, not white */
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
@@ -75,19 +80,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ambient background glow */
-body::before {
-  content: '';
-  position: fixed;
-  top: -40%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120%;
-  height: 80%;
-  background: var(--gradient-glow);
-  pointer-events: none;
-  z-index: 0;
-}
+/* Ambient background glow removed for Gradient Waves */
 
 /* ─── Typography ──────────────────────────────────────────────────────────── */
 h1, h2, h3, h4 {
@@ -493,6 +486,76 @@ a {
 }
 
 /* ─── Dashboard Page ──────────────────────────────────────────────────────── */
+/* ─── Dashboard Split Layout ──────────────────────────────────────────────── */
+.dashboard-split {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+}
+
+.dashboard-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+  height: 100%;
+}
+
+.hero-logo-wrapper {
+  position: relative;
+  transition: transform 0.1s ease-out;
+  transform-style: preserve-3d;
+}
+
+.hero-logo-wrapper:hover .hero-upload-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) translateZ(50px);
+}
+
+.hero-logo {
+  max-width: 100%;
+  width: 400px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(132, 204, 22, 0.3));
+  display: block;
+}
+
+.hero-upload-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9) translateZ(20px);
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: var(--gradient-primary);
+  color: #000;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(132, 204, 22, 0.4);
+}
+
+.hero-upload-btn:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 15px 40px rgba(132, 204, 22, 0.6);
+}
+
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 20px;
+}
+
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -631,6 +694,7 @@ a {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 14px;
+  padding-right: 36px;
 }
 
 .meeting-card-title {
@@ -847,9 +911,14 @@ a {
   font-size: 0.65rem;
   padding: 2px 7px;
   border-radius: 10px;
-  background: rgba(124, 58, 237, 0.15);
-  color: var(--accent-purple);
+  background: rgba(132, 204, 22, 0.15);
+  color: var(--primary-color);
   font-weight: 700;
+}
+
+.tab-btn.active .tab-badge {
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
 }
 
 .tab-content {
@@ -1221,8 +1290,27 @@ a {
 
 /* ─── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
+  .header {
+    margin: 10px 16px !important;
+    top: 10px !important;
+    width: auto !important;
+  }
+
+  .dashboard-split {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    min-height: auto;
+  }
+  .hero-logo {
+    width: 200px; /* Scaled down further for mobile */
+  }
+  .dashboard-right {
+    padding-top: 10px;
+  }
+
   .header-inner {
     padding: 0 16px;
+    height: 60px; /* Ensure sufficient height */
   }
 
   .main {
@@ -1264,19 +1352,253 @@ a {
 
 @media (max-width: 480px) {
   .header-nav {
-    gap: 2px;
+    gap: 4px;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
   }
 
   .nav-link span {
     display: none;
   }
+  
+  .logo-text {
+    font-size: 1rem;
+  }
+  
+  .logo-badge {
+    display: none;
+  }
 
   .dashboard-stats {
     width: 100%;
+    margin-top: 10px;
   }
 
   .stat-item {
     flex: 1;
     justify-content: center;
   }
+}
+
+/* ── Tabs & Record Audio UI ─────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-glass);
+}
+
+.tab-btn.active {
+  color: var(--text-primary);
+  background: var(--primary-color);
+}
+
+.tab-content {
+  display: none;
+  flex-direction: column;
+}
+
+.tab-content.active {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.record-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: var(--bg-card);
+  border: 2px dashed var(--border-color);
+  border-radius: 16px;
+  margin-bottom: 24px;
+}
+
+.timer {
+  font-size: 48px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  transition: color 0.3s ease;
+}
+
+.timer.recording {
+  color: #ef4444; /* red for recording */
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% { text-shadow: 0 0 10px rgba(239, 68, 68, 0); }
+  50% { text-shadow: 0 0 20px rgba(239, 68, 68, 0.6); }
+  100% { text-shadow: 0 0 10px rgba(239, 68, 68, 0); }
+}
+
+.record-controls {
+  display: flex;
+  gap: 16px;
+}
+
+.record-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  border-radius: 32px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.record-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.record-btn.stop-btn {
+  background: #ef4444;
+}
+
+.record-btn.stop-btn:hover {
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.record-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+}
+
+.stop-icon {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: white;
+}
+
+.recording-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-card);
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.audio-player {
+  width: 100%;
+  border-radius: 32px;
+  outline: none;
+}
+
+.recording-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.discard-btn {
+  padding: 12px 24px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.discard-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+/* ─── Glassmorphism Overrides ───────────────────────────────────────────── */
+.header,
+.stat-item,
+.meeting-card,
+.summary-card,
+.dropzone,
+.record-container,
+.recording-preview,
+.file-selected,
+.action-item,
+.transcript-box {
+  background: rgba(15, 16, 23, 0.85) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+  border-radius: 16px;
+}
+
+.header {
+  background: rgba(10, 10, 15, 0.75) !important;
+  max-width: 1200px;
+  margin: 20px auto !important;
+  top: 20px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.meeting-card:hover, .stat-item:hover, .dropzone.drag-over {
+  background: rgba(25, 26, 36, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.35) !important;
+  transform: translateY(-2px);
+}
+
+.upload-btn, .record-btn, .copy-btn {
+  background: rgba(132, 204, 22, 0.5) !important;
+  color: #fff !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(132, 204, 22, 0.4) !important;
+}
+
+.upload-btn:hover, .record-btn:hover, .copy-btn:hover {
+  background: rgba(132, 204, 22, 0.7) !important;
+  box-shadow: 0 0 20px rgba(132, 204, 22, 0.4) !important;
+}
+
+.search-input {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.search-input:focus {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid var(--primary-color) !important;
+  box-shadow: 0 0 0 4px rgba(132, 204, 22, 0.15) !important;
 }

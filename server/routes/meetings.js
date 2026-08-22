@@ -22,7 +22,9 @@ if (!fs.existsSync(uploadsDir)) {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),
   filename: (req, file, cb) => {
-    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;
+    let ext = path.extname(file.originalname).toLowerCase();
+    if (ext === '.weba') ext = '.webm'; // Whisper rejects .weba extension, so we rename it
+    const uniqueName = `${uuidv4()}${ext}`;
     cb(null, uniqueName);
   },
 });
@@ -35,6 +37,7 @@ const ALLOWED_MIME_TYPES = [
   'audio/wave',
   'audio/x-wav',
   'audio/webm',
+  'audio/weba',       // weba
   'audio/x-m4a',
   'audio/m4a',
   'audio/ogg',

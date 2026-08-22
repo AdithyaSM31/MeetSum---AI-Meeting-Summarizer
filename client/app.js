@@ -2,7 +2,29 @@
    Meeting Summarizer — SPA Application
    ═══════════════════════════════════════════════════════════════════════════ */
 
+import { GradientWaves } from './GradientWaves.js';
+
 const API_BASE = '/api/meetings';
+
+// Initialize background effect
+const initBackground = () => {
+  const container = document.getElementById('gradient-waves-bg');
+  if (container) {
+    new GradientWaves(container, {
+      horizonColor: '#84cc16',
+      waveColor: '#84cc16',
+      crestColor: '#FFFFFF',
+      opacity: 1,
+      speed: 0.4
+    });
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBackground);
+} else {
+  initBackground();
+}
 
 // ─── Router ──────────────────────────────────────────────────────────────────
 class Router {
@@ -153,20 +175,56 @@ function stopPolling() {
 async function renderDashboard() {
   const main = document.getElementById('app-main');
   main.innerHTML = `
-    <div class="page-enter">
-      <div class="dashboard-header">
-        <h1>Your Meetings</h1>
-        <div class="dashboard-stats" id="dashboard-stats"></div>
+    <div class="page-enter dashboard-split">
+      <div class="dashboard-left" id="hero-logo-container">
+        <div class="hero-logo-wrapper" id="hero-logo-wrapper">
+          <img src="meetsum_logo.png" alt="MeetSum Logo" class="hero-logo" />
+          <button class="hero-upload-btn" onclick="navigateTo('upload')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Meeting
+          </button>
+        </div>
       </div>
-      <div id="meetings-container">
-        <div class="meetings-grid">
-          <div class="skeleton skeleton-card"></div>
-          <div class="skeleton skeleton-card"></div>
-          <div class="skeleton skeleton-card"></div>
+      <div class="dashboard-right">
+        <div class="dashboard-header">
+          <h1>Your Meetings</h1>
+          <div class="dashboard-stats" id="dashboard-stats"></div>
+        </div>
+        <div id="meetings-container">
+          <div class="meetings-grid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
         </div>
       </div>
     </div>
   `;
+
+  // 3D Tilt Logic
+  setTimeout(() => {
+    const container = document.getElementById('hero-logo-container');
+    const wrapper = document.getElementById('hero-logo-wrapper');
+    if (container && wrapper) {
+      container.addEventListener('mousemove', (e) => {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -15; // Max 15deg tilt
+        const rotateY = ((x - centerX) / centerX) * 15;
+        
+        wrapper.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+      });
+      
+      container.addEventListener('mouseleave', () => {
+        wrapper.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      });
+    }
+  }, 100);
 
   try {
     const meetings = await api.listMeetings();
@@ -296,43 +354,81 @@ function renderUpload() {
   const main = document.getElementById('app-main');
   main.innerHTML = `
     <div class="upload-page page-enter">
-      <h1>Upload Meeting Audio</h1>
-      <p class="upload-subtitle">Drop your audio file or click to browse. We'll transcribe it and generate a summary with action items.</p>
+      <h1>New Meeting</h1>
+      <p class="upload-subtitle">Upload a file or record live. We'll transcribe it and generate a summary.</p>
 
-      <div class="dropzone" id="dropzone">
-        <div class="dropzone-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-        </div>
-        <p class="dropzone-text">Drag & drop your audio file here</p>
-        <p class="dropzone-hint">or <span>click to browse</span> · MP3, WAV, M4A, WebM · Max 200 MB</p>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="upload">Upload File</button>
+        <button class="tab-btn" data-tab="record">Record Live</button>
       </div>
-      <input type="file" class="file-input" id="file-input" accept=".mp3,.wav,.m4a,.mp4,.webm,.ogg,.flac,.mpeg,.mpga">
 
-      <div class="file-selected" id="file-selected">
-        <div class="file-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18V5l12-2v13"/>
-            <circle cx="6" cy="18" r="3"/>
-            <circle cx="18" cy="16" r="3"/>
-          </svg>
+      <div class="tab-content active" id="tab-upload">
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <p class="dropzone-text">Drag & drop your audio file here</p>
+          <p class="dropzone-hint">or <span>click to browse</span> · MP3, WAV, M4A, WebM · Max 200 MB</p>
         </div>
-        <div class="file-info">
-          <div class="file-name" id="file-name"></div>
-          <div class="file-size" id="file-size-display"></div>
+        <input type="file" class="file-input" id="file-input" accept=".mp3,.wav,.m4a,.mp4,.webm,.weba,.ogg,.flac,.mpeg,.mpga">
+
+        <div class="file-selected" id="file-selected">
+          <div class="file-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"/>
+              <circle cx="6" cy="18" r="3"/>
+              <circle cx="18" cy="16" r="3"/>
+            </svg>
+          </div>
+          <div class="file-info">
+            <div class="file-name" id="file-name"></div>
+            <div class="file-size" id="file-size-display"></div>
+          </div>
+          <button class="file-remove" id="file-remove" aria-label="Remove file">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
-        <button class="file-remove" id="file-remove" aria-label="Remove file">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+
+        <button class="upload-btn" id="upload-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload & Process
         </button>
       </div>
 
-      <button class="upload-btn" id="upload-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Upload & Process
-      </button>
+      <div class="tab-content" id="tab-record">
+        <div class="record-container">
+          <div class="timer" id="record-timer">00:00</div>
+          <div class="record-controls">
+            <button class="record-btn" id="start-record-btn">
+              <div class="record-icon"></div>
+              <span>Start Recording</span>
+            </button>
+            <button class="record-btn stop-btn hidden" id="stop-record-btn">
+              <div class="stop-icon"></div>
+              <span>Stop Recording</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="recording-preview hidden" id="recording-preview">
+          <audio controls controlsList="nodownload" id="audio-preview" class="audio-player"></audio>
+          <div class="recording-actions">
+            <button class="upload-btn" id="upload-recording-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Summarize
+            </button>
+            <button class="discard-btn" id="download-recording-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download
+            </button>
+            <button class="discard-btn" id="discard-recording-btn">Discard</button>
+          </div>
+        </div>
+      </div>
 
       <div class="upload-progress" id="upload-progress">
         <div class="progress-bar-track">
@@ -349,7 +445,146 @@ function renderUpload() {
     </div>
   `;
 
+  setupTabs();
   setupUploadHandlers();
+  setupRecordingHandlers();
+}
+
+// Shared upload execution
+async function executeSharedUpload(fileToUpload, submitBtnId) {
+  if (!fileToUpload) return;
+
+  const btn = document.getElementById(submitBtnId);
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+  
+  const progress = document.getElementById('upload-progress');
+  progress.classList.add('visible');
+
+  let pct = 0;
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+  const progressPercent = document.getElementById('progress-percent');
+
+  const progressInterval = setInterval(() => {
+    pct = Math.min(pct + Math.random() * 15, 90);
+    progressBar.style.width = pct + '%';
+    progressPercent.textContent = Math.round(pct) + '%';
+  }, 300);
+
+  try {
+    progressText.textContent = 'Uploading audio...';
+    await api.uploadAudio(fileToUpload);
+
+    clearInterval(progressInterval);
+    progressBar.style.width = '100%';
+    progressPercent.textContent = '100%';
+    progressText.textContent = 'Upload complete! Processing...';
+
+    setTimeout(() => {
+      window.location.hash = '#/';
+    }, 1000);
+  } catch (err) {
+    clearInterval(progressInterval);
+    progress.classList.remove('visible');
+    showToast(err.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload & Process`;
+  }
+}
+
+function setupRecordingHandlers() {
+  const startBtn = document.getElementById('start-record-btn');
+  const stopBtn = document.getElementById('stop-record-btn');
+  const timerDisplay = document.getElementById('record-timer');
+  const previewContainer = document.getElementById('recording-preview');
+  const audioPreview = document.getElementById('audio-preview');
+  const uploadBtn = document.getElementById('upload-recording-btn');
+  const discardBtn = document.getElementById('discard-recording-btn');
+  const downloadBtn = document.getElementById('download-recording-btn');
+  
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordingInterval = null;
+  let startTime = 0;
+  let recordedBlob = null;
+
+  startBtn.addEventListener('click', async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        clearInterval(recordingInterval);
+        recordedBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(recordedBlob);
+        audioPreview.src = audioUrl;
+        
+        startBtn.classList.remove('hidden');
+        stopBtn.classList.add('hidden');
+        previewContainer.classList.remove('hidden');
+        
+        // Stop all tracks to release microphone
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      
+      startTime = Date.now();
+      timerDisplay.classList.add('recording');
+      recordingInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const secs = String(elapsed % 60).padStart(2, '0');
+        timerDisplay.textContent = `${mins}:${secs}`;
+      }, 1000);
+
+      startBtn.classList.add('hidden');
+      stopBtn.classList.remove('hidden');
+      previewContainer.classList.add('hidden');
+
+    } catch (err) {
+      console.error('Error accessing microphone:', err);
+      showToast('Microphone access denied or unavailable.', 'error');
+    }
+  });
+
+  stopBtn.addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      timerDisplay.classList.remove('recording');
+    }
+  });
+
+  discardBtn.addEventListener('click', () => {
+    recordedBlob = null;
+    audioPreview.src = '';
+    previewContainer.classList.add('hidden');
+    timerDisplay.textContent = '00:00';
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    if (!recordedBlob) return;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(recordedBlob);
+    a.download = `Recording-${timestamp}.webm`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  uploadBtn.addEventListener('click', () => {
+    if (!recordedBlob) return;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const file = new File([recordedBlob], `Recording-${timestamp}.webm`, { type: 'audio/webm' });
+    executeSharedUpload(file, 'upload-recording-btn');
+  });
 }
 
 function setupUploadHandlers() {
@@ -394,7 +629,7 @@ function setupUploadHandlers() {
   });
 
   // Upload button
-  uploadBtn.addEventListener('click', () => handleUpload());
+  uploadBtn.addEventListener('click', () => executeSharedUpload(selectedFile, 'upload-btn'));
 
   function selectFile(file) {
     // Validate file size
@@ -408,52 +643,6 @@ function setupUploadHandlers() {
     document.getElementById('file-size-display').textContent = formatFileSize(file.size);
     fileSelected.classList.add('visible');
     uploadBtn.classList.add('visible');
-  }
-
-  async function handleUpload() {
-    if (!selectedFile) return;
-
-    uploadBtn.disabled = true;
-    uploadBtn.textContent = 'Processing...';
-    const progress = document.getElementById('upload-progress');
-    progress.classList.add('visible');
-
-    // Simulate upload progress
-    let pct = 0;
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const progressPercent = document.getElementById('progress-percent');
-
-    const progressInterval = setInterval(() => {
-      pct = Math.min(pct + Math.random() * 15, 90);
-      progressBar.style.width = pct + '%';
-      progressPercent.textContent = Math.round(pct) + '%';
-    }, 300);
-
-    try {
-      progressText.textContent = 'Uploading audio...';
-      const result = await api.uploadAudio(selectedFile);
-
-      clearInterval(progressInterval);
-      progressBar.style.width = '100%';
-      progressPercent.textContent = '100%';
-      progressText.textContent = 'Upload complete! Processing...';
-
-      showToast('Audio uploaded! Transcription in progress...');
-
-      // Navigate to the meeting detail after a moment
-      setTimeout(() => {
-        window.location.hash = `#/meeting/${result.id}`;
-      }, 1200);
-
-    } catch (error) {
-      clearInterval(progressInterval);
-      progressBar.style.width = '0%';
-      progress.classList.remove('visible');
-      uploadBtn.disabled = false;
-      uploadBtn.textContent = 'Upload & Process';
-      showToast(error.message, 'error');
-    }
   }
 }
 

@@ -11,18 +11,14 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- ─── Background Effect ─────────────────────────────────────────────── -->
+  <div id="gradient-waves-bg" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;"></div>
+
   <!-- ─── Header ──────────────────────────────────────────────────────── -->
   <header class="header" id="app-header">
     <div class="header-inner">
       <a href="#/" class="logo" id="logo-link">
-        <div class="logo-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-            <line x1="12" y1="19" x2="12" y2="23"/>
-            <line x1="8" y1="23" x2="16" y2="23"/>
-          </svg>
-        </div>
+        <img src="meetsum_logo.png" alt="MeetSum Logo" class="logo-image" style="height: 36px; width: auto; object-fit: contain;">
         <span class="logo-text">MeetSum</span>
         <span class="logo-badge">AI</span>
       </a>
@@ -47,6 +43,6 @@
   <!-- ─── Toast Container ─────────────────────────────────────────────── -->
   <div class="toast-container" id="toast-container"></div>
 
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
