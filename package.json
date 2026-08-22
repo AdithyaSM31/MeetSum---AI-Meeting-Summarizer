@@ -1,0 +1,28 @@
+{
+  "name": "unthinkable",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">   <img src=\"meetsum_logo.png\" alt=\"MeetSum Logo\" width=\"300\"/> </div>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdithyaSM31/MeetSum---AI-Meeting-Summarizer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdithyaSM31/MeetSum---AI-Meeting-Summarizer/issues"
+  },
+  "homepage": "https://github.com/AdithyaSM31/MeetSum---AI-Meeting-Summarizer#readme",
+  "dependencies": {
+    "@capacitor/core": "^8.5.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.0"
+  }
+}

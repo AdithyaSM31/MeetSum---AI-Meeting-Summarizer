@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MeetSum</string>
+    <string name="title_activity_main">MeetSum</string>
+    <string name="package_name">com.meetsum.app</string>
+    <string name="custom_url_scheme">com.meetsum.app</string>
+</resources>
