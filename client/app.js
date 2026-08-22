@@ -4,7 +4,10 @@
 
 import { GradientWaves } from './GradientWaves.js';
 
-const API_BASE = '/api/meetings';
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE = isLocalhost 
+  ? '/api/meetings' 
+  : 'https://meetsum-backend.onrender.com/api/meetings';
 
 // Initialize background effect
 const initBackground = () => {
