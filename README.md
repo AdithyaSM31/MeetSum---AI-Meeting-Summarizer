@@ -1,8 +1,8 @@
+# 🎙️ Meeting Summarizer
+
 <div align="center">
   <img src="meetsum_logo.png" alt="MeetSum Logo" width="300"/>
 </div>
-
-# 🎙️ Meeting Summarizer
 
 AI-powered meeting summarizer that transcribes audio recordings and generates actionable summaries with key decisions and action items.
 
