@@ -1,0 +1,28 @@
+{
+  "name": "meeting-summarizer-server",
+  "version": "1.0.0",
+  "description": "Backend server for Meeting Summarizer — transcribes audio and generates AI-powered summaries",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.78.0",
+    "uuid": "^11.0.5"
+  },
+  "keywords": [
+    "meeting",
+    "summarizer",
+    "whisper",
+    "openai",
+    "transcription"
+  ],
+  "license": "MIT"
+}
