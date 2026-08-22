@@ -6,6 +6,8 @@
 
 AI-powered meeting summarizer that transcribes audio recordings and generates actionable summaries with key decisions and action items.
 
+### 🌐 **[Live Demo Available Here](https://meet-sum-ai-meeting-summarizer.vercel.app/)**
+
 <div align="center">
   <img src="meetsum.png" alt="MeetSum Dashboard" width="800" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); margin: 20px 0;"/>
 </div>
