@@ -1,6 +1,14 @@
+<div align="center">
+  <img src="meetsum_logo.png" alt="MeetSum Logo" width="300"/>
+</div>
+
 # 🎙️ Meeting Summarizer
 
 AI-powered meeting summarizer that transcribes audio recordings and generates actionable summaries with key decisions and action items.
+
+<div align="center">
+  <img src="meetsum.png" alt="MeetSum Dashboard" width="800" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); margin: 20px 0;"/>
+</div>
 
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/OpenAI-Whisper%20%2B%20GPT--4o--mini-412991?style=flat-square&logo=openai&logoColor=white)
