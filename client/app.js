@@ -4,7 +4,9 @@
 
 import { GradientWaves } from './GradientWaves.js';
 
-const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+// Capacitor apps run on 'localhost' on the device, so we must explicitly check for the native runtime
+const isNativeApp = !!window.Capacitor && window.Capacitor.isNative;
+const isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && !isNativeApp;
 const API_BASE = isLocalhost 
   ? '/api/meetings' 
   : 'https://meetsum-backend.onrender.com/api/meetings';
