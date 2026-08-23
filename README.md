@@ -8,7 +8,9 @@ AI-powered meeting summarizer that transcribes audio recordings and generates ac
 
 ### 🌐 **[Live Demo Available Here](https://meet-sum-ai-meeting-summarizer.vercel.app/)**
 
-https://github.com/AdithyaSM31/MeetSum---AI-Meeting-Summarizer/raw/main/demo.mp4
+<div align="center">
+  <video src="https://github.com/AdithyaSM31/MeetSum---AI-Meeting-Summarizer/raw/main/demo.mp4" width="800" controls="controls" muted="muted"></video>
+</div>
 
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/OpenAI-Whisper%20%2B%20GPT--4o--mini-412991?style=flat-square&logo=openai&logoColor=white)
