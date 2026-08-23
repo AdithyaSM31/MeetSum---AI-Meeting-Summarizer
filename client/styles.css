@@ -1577,15 +1577,15 @@ a {
   transform: translateY(-2px);
 }
 
-.upload-btn, .record-btn, .copy-btn {
+.upload-btn, .record-btn, .copy-btn, .summarize-btn {
   background: rgba(132, 204, 22, 0.5) !important;
-  color: #fff !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(132, 204, 22, 0.4) !important;
+  color: white !important;
+  border-color: rgba(132, 204, 22, 0.5) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.upload-btn:hover, .record-btn:hover, .copy-btn:hover {
+.upload-btn:hover, .record-btn:hover, .copy-btn:hover, .summarize-btn:hover {
   background: rgba(132, 204, 22, 0.7) !important;
   box-shadow: 0 0 20px rgba(132, 204, 22, 0.4) !important;
 }

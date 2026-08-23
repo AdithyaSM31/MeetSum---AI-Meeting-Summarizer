@@ -4,10 +4,9 @@
 
 import { GradientWaves } from './GradientWaves.js';
 
-// Capacitor apps run on 'localhost' on the device, so we must explicitly check for the native runtime
-const isNativeApp = !!window.Capacitor && window.Capacitor.isNative;
-const isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && !isNativeApp;
-const API_BASE = isLocalhost 
+// Only use local API if we are explicitly running the local dev server on port 3001
+const isLocalDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3001';
+const API_BASE = isLocalDev 
   ? '/api/meetings' 
   : 'https://meetsum-backend.onrender.com/api/meetings';
 
@@ -422,7 +421,7 @@ function renderUpload() {
         <div class="recording-preview hidden" id="recording-preview">
           <audio controls controlsList="nodownload" id="audio-preview" class="audio-player"></audio>
           <div class="recording-actions">
-            <button class="upload-btn" id="upload-recording-btn">
+            <button class="discard-btn summarize-btn" id="upload-recording-btn">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               Summarize
             </button>
@@ -573,15 +572,46 @@ function setupRecordingHandlers() {
     timerDisplay.textContent = '00:00';
   });
 
-  downloadBtn.addEventListener('click', () => {
+  downloadBtn.addEventListener('click', async () => {
     if (!recordedBlob) return;
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(recordedBlob);
-    a.download = `Recording-${timestamp}.webm`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const filename = `Recording-${timestamp}.webm`;
+
+    if (window.Capacitor && window.Capacitor.isNativePlatform()) {
+      try {
+        const reader = new FileReader();
+        reader.readAsDataURL(recordedBlob);
+        reader.onloadend = async () => {
+          const base64data = reader.result.split(',')[1];
+          // Use the native bridge plugins directly
+          const Filesystem = window.Capacitor.Plugins.Filesystem;
+          const Share = window.Capacitor.Plugins.Share;
+
+          const savedFile = await Filesystem.writeFile({
+            path: filename,
+            data: base64data,
+            directory: 'DOCUMENTS'
+          });
+
+          await Share.share({
+            title: filename,
+            text: 'Here is my recorded meeting',
+            url: savedFile.uri,
+            dialogTitle: 'Save or Share Recording'
+          });
+        };
+      } catch (err) {
+        console.error('Download failed on native:', err);
+        showToast('Download failed.', 'error');
+      }
+    } else {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(recordedBlob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   });
 
   uploadBtn.addEventListener('click', () => {

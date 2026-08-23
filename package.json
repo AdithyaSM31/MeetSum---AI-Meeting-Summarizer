@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/AdithyaSM31/MeetSum---AI-Meeting-Summarizer#readme",
   "dependencies": {
-    "@capacitor/core": "^8.5.0"
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/filesystem": "^8.1.3",
+    "@capacitor/share": "^8.0.1"
   },
   "devDependencies": {
     "@capacitor/android": "^8.5.0",
