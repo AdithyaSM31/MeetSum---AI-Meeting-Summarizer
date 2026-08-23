@@ -9,7 +9,7 @@ AI-powered meeting summarizer that transcribes audio recordings and generates ac
 ### 🌐 **[Live Demo Available Here](https://meet-sum-ai-meeting-summarizer.vercel.app/)**
 
 <div align="center">
-  <img src="meetsum.png" alt="MeetSum Dashboard" width="800" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); margin: 20px 0;"/>
+  <video src="demo.mp4" width="800" controls="controls" muted="muted" style="max-width: 100%; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); margin: 20px 0;"></video>
 </div>
 
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)
