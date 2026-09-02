@@ -61,20 +61,20 @@ app.listen(PORT, () => {
   // ─── Keep-Alive Cron Job (Render Free Tier) ──────────────────────────────────
   // Render spins down free tier instances after 15 minutes of inactivity.
   // This internal cron job pings the /api/health endpoint every 14 minutes.
-  const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
-  const FOURTEEN_MINUTES = 14 * 60 * 1000;
-  
-  setInterval(async () => {
-    try {
-      console.log(`[Keep-Alive] Pinging ${RENDER_URL}/api/health at ${new Date().toISOString()}`);
-      const res = await fetch(`${RENDER_URL}/api/health`);
-      if (res.ok) {
-        console.log('[Keep-Alive] Ping successful.');
-      } else {
-        console.warn(`[Keep-Alive] Ping returned status: ${res.status}`);
-      }
-    } catch (err) {
-      console.error('[Keep-Alive] Ping failed:', err.message);
-    }
-  }, FOURTEEN_MINUTES);
+  // const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  // const FOURTEEN_MINUTES = 14 * 60 * 1000;
+  // 
+  // setInterval(async () => {
+  //   try {
+  //     console.log(`[Keep-Alive] Pinging ${RENDER_URL}/api/health at ${new Date().toISOString()}`);
+  //     const res = await fetch(`${RENDER_URL}/api/health`);
+  //     if (res.ok) {
+  //       console.log('[Keep-Alive] Ping successful.');
+  //     } else {
+  //       console.warn(`[Keep-Alive] Ping returned status: ${res.status}`);
+  //     }
+  //   } catch (err) {
+  //     console.error('[Keep-Alive] Ping failed:', err.message);
+  //   }
+  // }, FOURTEEN_MINUTES);
 });
